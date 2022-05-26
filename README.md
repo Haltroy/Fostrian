@@ -3,8 +3,8 @@
 Fostrian is a nodal data structure format created for use with [Foster](https://github.com/haltroy/Foster).
 Each data can represent any single type of data (string, integer, long, float etc.) and can have multiple sub nodes that can hold more data.
 
-- Latest Long-Term Supported Version: [`1.0.1`](https://github.com/haltroy/Fostrian/tree/1.0.1)
-- Latest Recommended Version: [`1.0.1`](https://github.com/haltroy/Fostrian/tree/1.0.1)
+- Latest Long-Term Supported Version: [`1.0.2`](https://github.com/haltroy/Fostrian/tree/1.0.2)
+- Latest Recommended Version: [`1.0.2`](https://github.com/haltroy/Fostrian/tree/1.0.2)
 - In Development Version: [`1.1`](https://github.com/haltroy/Fostrian/tree/1.0)
 
 ## Installation & Usage
@@ -45,5 +45,5 @@ Please visit [VERSIONS.md](https://github.com/haltroy/Fostrian/blob/main/VERSION
 
 | Version Tree                                          | Date              | Status                   | .NET Standard | Support            | LTS Status            |
 | ----------------------------------------------------- | ----------------- | ------------------------ | ------------- | ------------------ | --------------------- |
-| [`1.1.x`](https://github.com/haltroy/Fostrian/tree/1.1) | _No Certain Date_ | _In Development_         | 2.0           | :clock12:          | None                  |
-| [`1.0.x`](https://github.com/haltroy/Fostrian/tree/1.0) | 25 May 2022       | **Latest LTS Supported** | 2.0           | :heavy_check_mark: | Ends in `25 May 2024` |
+| [`1.1.x`](https://github.com/haltroy/Fostrian/blob/main/VERSIONS.md#1.1.x) | _No Certain Date_ | _In Development_         | 2.0           | :clock12:          | None                  |
+| [`1.0.x`](https://github.com/haltroy/Fostrian/blob/main/VERSIONS.md#1.0.x) | 25 May 2022       | **Latest LTS Supported** | 2.0           | :heavy_check_mark: | Ends in `25 May 2024` |

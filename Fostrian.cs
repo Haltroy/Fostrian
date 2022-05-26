@@ -43,6 +43,8 @@ namespace LibFoster
 
         #endregion Tools
 
+        #region Parse
+
         /// <summary>
         /// Parses a <paramref ref="stream" /> that contains information.
         /// </summary>
@@ -111,19 +113,6 @@ namespace LibFoster
             }
         }
 
-        /// <summary>
-        /// Exception thrown on Fostrian format errors.
-        /// </summary>
-        public class FostrianException : Exception
-        {
-            /// <summary>
-            /// Exception thrown on Fostrian format errors.
-            /// </summary>
-            public FostrianException(string message) : base(message)
-            {
-            }
-        }
-
         private static void ParseRecursive(Stream stream, System.Text.Encoding encoding, FostrianNode rootnode, int count, long _Stop)
         {
             if (rootnode == null) { throw new ArgumentNullException(nameof(rootnode)); }
@@ -154,6 +143,29 @@ namespace LibFoster
             }
         }
 
+        #endregion Parse
+
+        #region Exceptions
+
+        /// <summary>
+        /// Exception thrown on Fostrian format errors.
+        /// </summary>
+        public class FostrianException : Exception
+        {
+            /// <summary>
+            /// Exception thrown on Fostrian format errors.
+            /// </summary>
+            public FostrianException(string message) : base(message)
+            {
+            }
+        }
+
+        #endregion Exceptions
+
+        #region Encodings
+
+        private static EncodingInfo[] encodings = System.Text.Encoding.GetEncodings();
+
         /// <summary>
         /// Gets the <see cref="byte"/> representative of <paramref name="Encoding"/>.
         /// </summary>
@@ -161,34 +173,14 @@ namespace LibFoster
         /// <returns>A <see cref="byte"/>.</returns>
         public static byte GetFostrianCode(this System.Text.Encoding Encoding)
         {
-            if (Encoding == Encoding.Unicode)
+            for (int i = 0; i < encodings.Length; i++)
             {
-                return 0x03;
+                if (encodings[i].GetEncoding() == Encoding)
+                {
+                    return (byte)i;
+                }
             }
-            else if (Encoding == Encoding.BigEndianUnicode)
-            {
-                return 0x04;
-            }
-            else if (Encoding == Encoding.UTF32)
-            {
-                return 0x05;
-            }
-            else if (Encoding == Encoding.Default)
-            {
-                return 0x01;
-            }
-            else if (Encoding == Encoding.UTF8)
-            {
-                return 0x02;
-            }
-            else if (Encoding == Encoding.ASCII)
-            {
-                return 0x00;
-            }
-            else
-            {
-                throw new NotImplementedException("This encoding format is not implemented yet in this Fostrian library.");
-            }
+            throw new NotImplementedException("This encoding format is not implemented yet in this Fostrian library.");
         }
 
         /// <summary>
@@ -198,29 +190,12 @@ namespace LibFoster
         /// <returns><see cref="System.Text.Encoding"/></returns>
         public static System.Text.Encoding GetFostrianEncoding(byte value)
         {
-            switch (value)
-            {
-                default:
-                    throw new FostrianException("Cannot get encoding for ID " + value + ".");
-                case 0x01:
-                    return System.Text.Encoding.Default;
-
-                case 0x00:
-                    return System.Text.Encoding.ASCII;
-
-                case 0x02:
-                    return System.Text.Encoding.UTF8;
-
-                case 0x03:
-                    return System.Text.Encoding.Unicode;
-
-                case 0x04:
-                    return System.Text.Encoding.BigEndianUnicode;
-
-                case 0x05:
-                    return System.Text.Encoding.UTF32;
-            }
+            return encodings[value].GetEncoding();
         }
+
+        #endregion Encodings
+
+        #region Recreate
 
         /// <summary>
         /// Recreates <paramref name="node"/> and writes into <paramref name="CopyTo"/>.
@@ -264,6 +239,8 @@ namespace LibFoster
                 Recreate(node, fileStream);
             }
         }
+
+        #endregion Recreate
 
         /// <summary>
         /// Fostrian Node.
@@ -512,80 +489,81 @@ namespace LibFoster
             /// Adds <paramref name="input"/>.
             /// </summary>
             /// <param name="input"><see cref="int"/></param>
-            public void Add(int input) => Add(BitConverter.GetBytes(input));
+            public FostrianNode Add(int input) => Add(BitConverter.GetBytes(input));
 
             /// <summary>
             /// Adds <paramref name="input"/>.
             /// </summary>
             /// <param name="input"><see cref="uint"/></param>
-            public void Add(uint input) => Add(BitConverter.GetBytes(input));
+            public FostrianNode Add(uint input) => Add(BitConverter.GetBytes(input));
 
             /// <summary>
             /// Adds <paramref name="input"/>.
             /// </summary>
             /// <param name="input"><see cref="ulong"/></param>
-            public void Add(ulong input) => Add(BitConverter.GetBytes(input));
+            public FostrianNode Add(ulong input) => Add(BitConverter.GetBytes(input));
 
             /// <summary>
             /// Adds <paramref name="input"/>.
             /// </summary>
             /// <param name="input"><see cref="long"/></param>
-            public void Add(long input) => Add(BitConverter.GetBytes(input));
+            public FostrianNode Add(long input) => Add(BitConverter.GetBytes(input));
 
             /// <summary>
             /// Adds <paramref name="input"/>.
             /// </summary>
             /// <param name="input"><see cref="short"/></param>
-            public void Add(short input) => Add(BitConverter.GetBytes(input));
+            public FostrianNode Add(short input) => Add(BitConverter.GetBytes(input));
 
             /// <summary>
             /// Adds <paramref name="input"/>.
             /// </summary>
             /// <param name="input"><see cref="ushort"/></param>
-            public void Add(ushort input) => Add(BitConverter.GetBytes(input));
+            public FostrianNode Add(ushort input) => Add(BitConverter.GetBytes(input));
 
             /// <summary>
             /// Adds <paramref name="input"/>.
             /// </summary>
             /// <param name="input"><see cref="float"/></param>
-            public void Add(float input) => Add(BitConverter.GetBytes(input));
+            public FostrianNode Add(float input) => Add(BitConverter.GetBytes(input));
 
             /// <summary>
             /// Adds <paramref name="input"/>.
             /// </summary>
             /// <param name="input"><see cref="double"/></param>
-            public void Add(double input) => Add(BitConverter.GetBytes(input));
+            public FostrianNode Add(double input) => Add(BitConverter.GetBytes(input));
 
             /// <summary>
             /// Adds <paramref name="input"/>.
             /// </summary>
             /// <param name="input"><see cref="bool"/></param>
-            public void Add(bool input) => Add(BitConverter.GetBytes(input));
+            public FostrianNode Add(bool input) => Add(BitConverter.GetBytes(input));
 
             /// <summary>
             /// Adds <paramref name="input"/>.
             /// </summary>
             /// <param name="input"><see cref="char"/></param>
-            public void Add(char input) => Add(BitConverter.GetBytes(input));
+            public FostrianNode Add(char input) => Add(BitConverter.GetBytes(input));
 
             /// <summary>
             /// Adds <paramref name="input"/> with <paramref name="encoding"/>.
             /// </summary>
             /// <param name="input"><see cref="string"/></param>
             /// <param name="encoding"><see cref="System.Text.Encoding"/> to use, set null for the default value.</param>
-            public void Add(string input, System.Text.Encoding encoding = null) => Add(encoding is null ? Encoding.GetBytes(input) : encoding.GetBytes(input));
+            public FostrianNode Add(string input, System.Text.Encoding encoding = null) => Add(encoding is null ? Encoding.GetBytes(input) : encoding.GetBytes(input));
 
             /// <summary>
             /// Adds <paramref name="input"/>.
             /// </summary>
             /// <param name="input"><see cref="byte"/> <seealso cref="Array"/>.</param>
-            public void Add(byte[] input) => Add(new FostrianNode() { IsRoot = false, Parent = this, Data = input });
+            public FostrianNode Add(byte[] input) => Add(new FostrianNode() { IsRoot = false, Parent = this, Data = input });
 
             /// <summary>
             /// Adds <paramref name="node"/>.
             /// </summary>
             /// <param name="node"><see cref="FostrianNode"/></param>
-            public void Add(FostrianNode node) => Values.Add(node);
+            public FostrianNode Add(FostrianNode node)
+            { node.IsRoot = false; node.Parent = this; Values.Add(node); return this; }
 
             #endregion Add
 
@@ -672,28 +650,30 @@ namespace LibFoster
             /// Removes <paramref name="node"/>.
             /// </summary>
             /// <param name="node"><see cref="FostrianNode"/></param>
-            public void Remove(FostrianNode node)
+            public FostrianNode Remove(FostrianNode node)
             {
                 node.Parent = null;
                 Values.Remove(node);
+                return this;
             }
 
             /// <summary>
             /// Removes <see cref="FostrianNode"/> at <paramref name="index"/>.
             /// </summary>
             /// <param name="index">Index of <see cref="FostrianNode"/>.</param>
-            public void RemoveAt(int index)
+            public FostrianNode RemoveAt(int index)
             {
                 var _node = Values[index];
                 _node.Parent = null;
                 Values.Remove(_node);
+                return this;
             }
 
             /// <summary>
             /// Removes all <see cref="FostrianNode"/>(s) that match the <paramref name="match"/>.
             /// </summary>
             /// <param name="match"><see cref="Predicate{T}"/> <seealso cref="FostrianNode"/></param>
-            public void RemoveAll(Predicate<FostrianNode> match)
+            public FostrianNode RemoveAll(Predicate<FostrianNode> match)
             {
                 for (int i = 0; i < Values.Count; i++)
                 {
@@ -703,6 +683,7 @@ namespace LibFoster
                         Remove(node);
                     }
                 }
+                return this;
             }
 
             /// <summary>
@@ -710,12 +691,13 @@ namespace LibFoster
             /// </summary>
             /// <param name="index">Starting Index.</param>
             /// <param name="count">Total Count</param>
-            public void RemoveRange(int index, int count)
+            public FostrianNode RemoveRange(int index, int count)
             {
                 for (int i = index; i < index + count; i++)
                 {
                     RemoveAt(i);
                 }
+                return this;
             }
 
             #endregion Remove
@@ -727,91 +709,92 @@ namespace LibFoster
             /// </summary>
             /// <param name="index">Index of <paramref name="node"/>.</param>
             /// <param name="node"><see cref="FostrianNode"/></param>
-            public void Insert(int index, FostrianNode node)
+            public FostrianNode Insert(int index, FostrianNode node)
             {
                 node.Parent = this;
                 Values.Insert(index, node);
+                return this;
             }
 
             /// <summary>
             /// Inserts <paramref name="input"/> into <paramref name="index"/>.
             /// </summary>
             /// <param name="input"><see cref="int"/></param>
-            public void Insert(int index, int input) => Insert(index, BitConverter.GetBytes(input));
+            public FostrianNode Insert(int index, int input) => Insert(index, BitConverter.GetBytes(input));
 
             /// <summary>
             /// Inserts <paramref name="input"/> into <paramref name="index"/>.
             /// </summary>
             /// <param name="input"><see cref="uint"/></param>
-            public void Insert(int index, uint input) => Insert(index, BitConverter.GetBytes(input));
+            public FostrianNode Insert(int index, uint input) => Insert(index, BitConverter.GetBytes(input));
 
             /// <summary>
             /// Inserts <paramref name="input"/> into <paramref name="index"/>.
             /// </summary>
             /// <param name="input"><see cref="ulong"/></param>
-            public void Insert(int index, ulong input) => Insert(index, BitConverter.GetBytes(input));
+            public FostrianNode Insert(int index, ulong input) => Insert(index, BitConverter.GetBytes(input));
 
             /// <summary>
             /// Inserts <paramref name="input"/> into <paramref name="index"/>.
             /// </summary>
             /// <param name="input"><see cref="long"/></param>
-            public void Insert(int index, long input) => Insert(index, BitConverter.GetBytes(input));
+            public FostrianNode Insert(int index, long input) => Insert(index, BitConverter.GetBytes(input));
 
             /// <summary>
             /// Inserts <paramref name="input"/> into <paramref name="index"/>.
             /// </summary>
             /// <param name="input"><see cref="short"/></param>
-            public void Insert(int index, short input) => Insert(index, BitConverter.GetBytes(input));
+            public FostrianNode Insert(int index, short input) => Insert(index, BitConverter.GetBytes(input));
 
             /// <summary>
             /// Inserts <paramref name="input"/> into <paramref name="index"/>.
             /// </summary>
             /// <param name="input"><see cref="ushort"/></param>
-            public void Insert(int index, ushort input) => Insert(index, BitConverter.GetBytes(input));
+            public FostrianNode Insert(int index, ushort input) => Insert(index, BitConverter.GetBytes(input));
 
             /// <summary>
             /// Inserts <paramref name="input"/> into <paramref name="index"/>.
             /// </summary>
             /// <param name="input"><see cref="float"/></param>
-            public void Insert(int index, float input) => Insert(index, BitConverter.GetBytes(input));
+            public FostrianNode Insert(int index, float input) => Insert(index, BitConverter.GetBytes(input));
 
             /// <summary>
             /// Inserts <paramref name="input"/> into <paramref name="index"/>.
             /// </summary>
             /// <param name="input"><see cref="double"/></param>
-            public void Insert(int index, double input) => Insert(index, BitConverter.GetBytes(input));
+            public FostrianNode Insert(int index, double input) => Insert(index, BitConverter.GetBytes(input));
 
             /// <summary>
             /// Inserts <paramref name="input"/> into <paramref name="index"/>.
             /// </summary>
             /// <param name="input"><see cref="bool"/></param>
-            public void Insert(int index, bool input) => Insert(index, BitConverter.GetBytes(input));
+            public FostrianNode Insert(int index, bool input) => Insert(index, BitConverter.GetBytes(input));
 
             /// <summary>
             /// Inserts <paramref name="input"/> into <paramref name="index"/>.
             /// </summary>
             /// <param name="input"><see cref="char"/></param>
-            public void Insert(int index, char input) => Insert(index, BitConverter.GetBytes(input));
+            public FostrianNode Insert(int index, char input) => Insert(index, BitConverter.GetBytes(input));
 
             /// <summary>
             /// Inserts <paramref name="input"/> with <paramref name="encoding"/> into <paramref name="index" />.
             /// </summary>
             /// <param name="input"><see cref="string"/></param>
             /// <param name="encoding"><see cref="System.Text.Encoding"/> to use, set null for the default value.</param>
-            public void Insert(int index, string input, System.Text.Encoding encoding = null) => Insert(index, encoding is null ? Encoding.GetBytes(input) : encoding.GetBytes(input));
+            public FostrianNode Insert(int index, string input, System.Text.Encoding encoding = null) => Insert(index, encoding is null ? Encoding.GetBytes(input) : encoding.GetBytes(input));
 
             /// <summary>
             /// Inserts <paramref name="input"/> into <paramref name="index"/>.
             /// </summary>
             /// <param name="input"><see cref="byte"/> <seealso cref="Array"/>.</param>
-            public void Insert(int index, byte[] input) => Insert(index, new FostrianNode() { IsRoot = false, Parent = this, Data = input });
+            public FostrianNode Insert(int index, byte[] input) => Insert(index, new FostrianNode() { IsRoot = false, Parent = this, Data = input });
 
             /// <summary>
             /// Inserts <paramref name="nodes"/> into <paramref name="index"/>.
             /// </summary>
             /// <param name="index">Starting index of <paramref name="nodes"/>.</param>
             /// <param name="nodes"><see cref="IEnumerable{T}"/> <seealso cref="FostrianNode"/></param>
-            public void InsertRange(int index, IEnumerable<FostrianNode> nodes)
+            public FostrianNode InsertRange(int index, IEnumerable<FostrianNode> nodes)
             {
                 int _i = 0;
                 foreach (FostrianNode node in nodes)
@@ -820,6 +803,7 @@ namespace LibFoster
                     Values.Insert(index + _i, node);
                     _i++;
                 }
+                return this;
             }
 
             #endregion Insert
@@ -848,20 +832,22 @@ namespace LibFoster
             /// Adds <paramref name="input"/>.
             /// </summary>
             /// <param name="input"><see cref="byte"/> <seealso cref="Array"/>.</param>
-            public void AddRange(IEnumerable<byte[]> input)
+            public FostrianNode AddRange(IEnumerable<byte[]> input)
             {
                 foreach (byte[] bytes in input)
                 {
                     Values.Add(new FostrianNode() { IsRoot = false, Parent = this, Data = bytes });
                 }
+                return this;
             }
 
             /// <summary>
             /// removes all sub nodes in this node.
             /// </summary>
-            public void Clear()
+            public FostrianNode Clear()
             {
                 RemoveRange(0, Values.Count);
+                return this;
             }
 
             /// <summary>
@@ -1058,20 +1044,23 @@ namespace LibFoster
             /// <param name="array"><see cref="Array"/> <see cref="FostrianNode"/>.</param>
             /// <param name="arrayIndex">Start of the copied <see cref="FostrianNode"/>(s) at <paramref name="array"/>.</param>
             /// <param name="count">Count of how many <see cref="FostrianNode"/>(s) should be copied.</param>
-            public void CopyTo(int index, FostrianNode[] array, int arrayIndex, int count) => Values.CopyTo(index, array, arrayIndex, count);
+            public FostrianNode CopyTo(int index, FostrianNode[] array, int arrayIndex, int count)
+            { Values.CopyTo(index, array, arrayIndex, count); return this; }
 
             /// <summary>
             /// Copies all the sub <see cref="FostrianNode"/>(s) into <paramref name="array"/> starting to <paramref name="arrayIndex"/>.
             /// </summary>
             /// <param name="array"><see cref="Array"/> <see cref="FostrianNode"/>.</param>
             /// <param name="arrayIndex">Start of the copied <see cref="FostrianNode"/>(s) at <paramref name="array"/>.</param>
-            public void CopyTo(FostrianNode[] array, int arrayIndex) => Values.CopyTo(array, arrayIndex);
+            public FostrianNode CopyTo(FostrianNode[] array, int arrayIndex)
+            { Values.CopyTo(array, arrayIndex); return this; }
 
             /// <summary>
             /// Copies all the sub <see cref="FostrianNode"/>(s) into <paramref name="array"/>.
             /// </summary>
             /// <param name="array"><see cref="Array"/> <see cref="FostrianNode"/>.</param>
-            public void CopyTo(FostrianNode[] array) => Values.CopyTo(array);
+            public FostrianNode CopyTo(FostrianNode[] array)
+            { Values.CopyTo(array); return this; }
 
             #endregion CopyTo
 

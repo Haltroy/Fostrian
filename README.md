@@ -1,12 +1,13 @@
 ﻿# Fostrian
 
 Fostrian is a nodal data structure format created for use with [Foster](https://github.com/haltroy/Foster).
-Each data can represent any single type of data (string, integer, long, float etc.) and can have multiple subnodes that can hold more data.
+Each data can represent any single type of data (string, integer, long, float etc.) and can have multiple sub nodes that can hold more data.
 
-- Latest Recommended Version: [`1.0`](https://github.com/haltroy/Fostrian/tree/1.0)
+- Latest Long-Term Supported Version: [`1.0.1`](https://github.com/haltroy/Fostrian/tree/1.0.1)
+- Latest Recommended Version: [`1.0.1`](https://github.com/haltroy/Fostrian/tree/1.0.1)
 - In Development Version: [`1.1`](https://github.com/haltroy/Fostrian/tree/1.0)
 
-## Intallation & Usage
+## Installation & Usage
 
 Fostrian is a C# library that can be used in any .NET project that supports [.NET Standard 2.0](https://github.com/dotnet/standard/blob/v2.1.0/docs/versions/netstandard2.0.md#platform-support). We recommend installing Fostrian from NuGet but we also share Fostrian binaries in GitHub Releases.
 
@@ -18,15 +19,15 @@ After installing Fostrian, add `LibFoster` to your usings:
 - VB: add `Imports LibFoster` to top
 - C#: add `using LibFoster;` to top
 
-A Fostrian formatted file contains subnodes that are named `FostrianNode` in code. Fostrian nodes should act similar to Lists or arrays. A Fostrian node can hold a byte array that contains data as the name `Data`. You can use the convertion methods such as `DataAsString()` to see the data. In order to add more data, you can use the `Add()` method with different data types that are already implemented. You can use certain List methods such as `Count`, `Find`, `Remove`. Each node has a root node.
+A Fostrian formatted file contains sub nodes that are named `FostrianNode` in code. Fostrian nodes should act similar to Lists or arrays. A Fostrian node can hold a byte array that contains data as the name `Data`. You can use the conversion methods such as `DataAsString()` to see the data. In order to add more data, you can use the `Add()` method with different data types that are already implemented. You can use certain List methods such as `Count`, `Find`, `Remove`. Each node has a root node.
 
-Fostrian keeps the conding of all strings inside a global cane wehre the data start and end byte marks are also stored, which is the beginning of the file.
+Fostrian keeps the encoding of all strings inside a global cane where the data start and end byte marks are also stored, which is the beginning of the file.
 
 ## Structure
 
 A Fostrian formatted file looks like this under a Hexadecimal Editor:
 
-`[Data Start Mark Byte] [Data End Mark Byte] [String Encoding Mark] [[Start Mark Byte] [Data itself] [End Mark Byte] [Int32 of how many subnodes does this data has] this repeats itself for each node]`
+`[Data Start Mark Byte] [Data End Mark Byte] [String Encoding Mark] [[Start Mark Byte] [Data itself] [End Mark Byte] [Int32 of how many sub nodes does this data has] this repeats itself for each node]`
 
 Example:
 
@@ -40,7 +41,9 @@ Which contains:
 
 ## Releases
 
-| Version                                               | Date              | Status                   | .NET Standard | Support            | LTS Status            |
+Please visit [VERSIONS.md](https://github.com/haltroy/Fostrian/blob/main/VERSIONS.md) for more information.
+
+| Version Tree                                          | Date              | Status                   | .NET Standard | Support            | LTS Status            |
 | ----------------------------------------------------- | ----------------- | ------------------------ | ------------- | ------------------ | --------------------- |
-| [`1.1`](https://github.com/haltroy/Fostrian/tree/1.1) | _No Certain Date_ | _In Development_         | 2.0           | :clock12:          | None                  |
-| [`1.0`](https://github.com/haltroy/Fostrian/tree/1.0) | 25 May 2022       | **Latest LTS Supported** | 2.0           | :heavy_check_mark: | Ends in `25 May 2024` |
+| [`1.1.x`](https://github.com/haltroy/Fostrian/tree/1.1) | _No Certain Date_ | _In Development_         | 2.0           | :clock12:          | None                  |
+| [`1.0.x`](https://github.com/haltroy/Fostrian/tree/1.0) | 25 May 2022       | **Latest LTS Supported** | 2.0           | :heavy_check_mark: | Ends in `25 May 2024` |

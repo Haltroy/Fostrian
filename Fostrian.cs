@@ -13,12 +13,6 @@ namespace LibFoster
         #region Tools
 
         /// <summary>
-        /// Generates a new empty root <see cref="FostrianNode"/>.
-        /// </summary>
-        /// <returns><see cref="FostrianNode"/></returns>
-        public static FostrianNode GenerateRootNode() => new FostrianNode() { IsRoot = true };
-
-        /// <summary>
         /// Seeks and searches <paramref name="search"/> on <paramref name="stream"/>.
         /// </summary>
         /// <param name="stream"><see cref="System.IO.Stream"/></param>
@@ -59,8 +53,8 @@ namespace LibFoster
         public static FostrianNode Parse(Stream stream, long stopPoint = -1)
         {
             stream = stream ?? throw new ArgumentNullException(nameof(stream));
-            var _Stop = stopPoint < 0 ? stream.Length : (stopPoint <= stream.Position ? stream.Position : stopPoint);
-            if (_Stop <= stream.Length)
+            var _Stop = stopPoint < 0 ? stream.Length : (stopPoint >= stream.Position ? stream.Position : stopPoint);
+            if (_Stop <= stream.Position)
             {
                 throw new FostrianException("End of stream reached prematurely.");
             }
@@ -71,7 +65,7 @@ namespace LibFoster
                 var encodingByte = (byte)stream.ReadByte();
                 var encoding = GetFostrianEncoding(encodingByte);
 #pragma warning disable IDE0017 // Simplify object initialization
-                FostrianNode rootNode = new FostrianNode() { IsRoot = true };
+                FostrianNode rootNode = GenerateRootNode();
 #pragma warning restore IDE0017 // Simplify object initialization
 
                 // DO NOT ADD THIS BELOW TO THE CONSTRUCTOR, STUFF MIGHT BREAK
@@ -89,10 +83,13 @@ namespace LibFoster
                     }
                     var node = new FostrianNode() { IsRoot = false, Parent = rootNode };
                     var endPoint = Search(stream, encodingEndByte);
+                    if (endPoint < 0) { break; }
                     stream.Position = streamPos;
                     byte[] DataBytes = new byte[endPoint - streamPos - 1];
+                    stream.Position++;
                     stream.Read(DataBytes, 0, DataBytes.Length);
                     var sizeBytes = new byte[sizeof(int)];
+                    stream.Position++;
                     stream.Read(sizeBytes, 0, sizeBytes.Length);
                     var nodesize = BitConverter.ToInt32(sizeBytes, 0);
                     node.Data = DataBytes;
@@ -124,7 +121,7 @@ namespace LibFoster
             if (rootnode == null) { throw new ArgumentNullException(nameof(rootnode)); }
             if (stream == null) { throw new ArgumentNullException(nameof(stream)); }
             if (count <= 0) { throw new ArgumentOutOfRangeException(nameof(count)); }
-            var encodingEndByte = (byte)3;
+            var encodingEndByte = rootnode.EndByte;
             for (int i = 0; i < count; i++)
             {
                 var streamPos = stream.Position;
@@ -136,8 +133,10 @@ namespace LibFoster
                 var endPoint = Search(stream, encodingEndByte);
                 stream.Position = streamPos;
                 byte[] DataBytes = new byte[endPoint - streamPos - 1];
+                stream.Position++;
                 stream.Read(DataBytes, 0, DataBytes.Length);
                 var sizeBytes = new byte[sizeof(int)];
+                stream.Position++;
                 stream.Read(sizeBytes, 0, sizeBytes.Length);
                 var nodesize = BitConverter.ToInt32(sizeBytes, 0);
                 node.Data = DataBytes;
@@ -247,6 +246,95 @@ namespace LibFoster
         }
 
         #endregion Recreate
+
+        #region Generate Root Node
+
+        /// <summary>
+        /// Generates a new empty root <see cref="FostrianNode"/>.
+        /// </summary>
+        /// <returns><see cref="FostrianNode"/></returns>
+        public static FostrianNode GenerateRootNode() => new FostrianNode() { IsRoot = true };
+
+        /// <summary>
+        /// Creates a new <see cref="FostrianNode"/>.
+        /// </summary>
+        /// <param name="subnodes">The sub nodes that this node will contain.</param>
+        public static FostrianNode GenerateRootNode(IEnumerable<FostrianNode> subnodes) => new FostrianNode(subnodes) { IsRoot = true };
+
+        /// <summary>
+        /// Creates a new root <see cref="FostrianNode"/> using <paramref name="data"/> as <seealso cref="Data"/>.
+        /// </summary>
+        /// <param name="data"><see cref="byte"/> <seealso cref="Array"/>.</param>
+        public static FostrianNode GenerateRootNode(string data, Encoding encoding = null) => new FostrianNode(data, encoding) { IsRoot = true };
+
+        /// <summary>
+        /// Creates a new <see cref="FostrianNode"/> using <paramref name="data"/> and <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="data"><see cref="string"/></param>
+        /// <param name="encoding">The encoding to use for <paramref name="data"/>.</param>
+        public static FostrianNode GenerateRootNode(byte[] data) => new FostrianNode(data) { IsRoot = true };
+
+        /// <summary>
+        /// Creates a new root <see cref="FostrianNode"/> with <paramref name="data"/>.
+        /// </summary>
+        /// <param name="data"><see cref="int"/></param>
+        public static FostrianNode GenerateRootNode(int data) => new FostrianNode(BitConverter.GetBytes(data)) { IsRoot = true };
+
+        /// <summary>
+        /// Creates a new root <see cref="FostrianNode"/> with <paramref name="data"/>.
+        /// </summary>
+        /// <param name="data"><see cref="uint"/></param>
+        public static FostrianNode GenerateRootNode(uint data) => new FostrianNode(BitConverter.GetBytes(data)) { IsRoot = true };
+
+        /// <summary>
+        /// Creates a new root <see cref="FostrianNode"/> with <paramref name="data"/>.
+        /// </summary>
+        /// <param name="data"><see cref="long"/></param>
+        public static FostrianNode GenerateRootNode(long data) => new FostrianNode(BitConverter.GetBytes(data)) { IsRoot = true };
+
+        /// <summary>
+        /// Creates a new root <see cref="FostrianNode"/> with <paramref name="data"/>.
+        /// </summary>
+        /// <param name="data"><see cref="ulong"/></param>
+        public static FostrianNode GenerateRootNode(ulong data) => new FostrianNode(BitConverter.GetBytes(data)) { IsRoot = true };
+
+        /// <summary>
+        /// Creates a new root <see cref="FostrianNode"/> with <paramref name="data"/>.
+        /// </summary>
+        /// <param name="data"><see cref="short"/></param>
+        public static FostrianNode GenerateRootNode(short data) => new FostrianNode(BitConverter.GetBytes(data)) { IsRoot = true };
+
+        /// <summary>
+        /// Creates a new root <see cref="FostrianNode"/> with <paramref name="data"/>.
+        /// </summary>
+        /// <param name="data"><see cref="ushort"/></param>
+        public static FostrianNode GenerateRootNode(ushort data) => new FostrianNode(BitConverter.GetBytes(data)) { IsRoot = true };
+
+        /// <summary>
+        /// Creates a new root <see cref="FostrianNode"/> with <paramref name="data"/>.
+        /// </summary>
+        /// <param name="data"><see cref="float"/></param>
+        public static FostrianNode GenerateRootNode(float data) => new FostrianNode(BitConverter.GetBytes(data)) { IsRoot = true };
+
+        /// <summary>
+        /// Creates a new root <see cref="FostrianNode"/> with <paramref name="data"/>.
+        /// </summary>
+        /// <param name="data"><see cref="double"/></param>
+        public static FostrianNode GenerateRootNode(double data) => new FostrianNode(BitConverter.GetBytes(data)) { IsRoot = true };
+
+        /// <summary>
+        /// Creates a new root <see cref="FostrianNode"/> with <paramref name="data"/>.
+        /// </summary>
+        /// <param name="data"><see cref="bool"/></param>
+        public static FostrianNode GenerateRootNode(bool data) => new FostrianNode(BitConverter.GetBytes(data)) { IsRoot = true };
+
+        /// <summary>
+        /// Creates a new root <see cref="FostrianNode"/> with <paramref name="data"/>.
+        /// </summary>
+        /// <param name="data"><see cref="char"/></param>
+        public static FostrianNode GenerateRootNode(char data) => new FostrianNode(BitConverter.GetBytes(data)) { IsRoot = true };
+
+        #endregion Generate Root Node
 
         /// <summary>
         /// Fostrian Node.
@@ -580,7 +668,12 @@ namespace LibFoster
             /// </summary>
             /// <param name="encoding"><see cref="System.Text.Encoding"/> to use when converting, use null for default.</param>
             /// <returns></returns>
-            public string DataAsString(Encoding encoding = null) => encoding != null ? encoding.GetString(Data) : Encoding.GetString(Data);
+            public string DataAsString(Encoding encoding = null) => encoding != null ? encoding.GetString(Data) : DataAsDefaultString;
+
+            /// <summary>
+            /// Gets the <see cref="Data"/> as a <seealso cref="string"/>.
+            /// </summary>
+            public string DataAsDefaultString => Encoding.GetString(Data);
 
             /// <summary>
             /// Converts the <see cref="Data"/> to <seealso cref="int"/>.

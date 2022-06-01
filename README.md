@@ -4,7 +4,7 @@ Fostrian is a nodal data structure format created for use with [Foster](https://
 Each data can represent any single type of data (string, integer, long, float etc.) and can have multiple sub nodes that can hold more data.
 
 - Latest Long-Term Supported Version: [`1.0`](https://github.com/haltroy/Fostrian/tree/1.0.3)
-- Latest Recommended Version: [`1.0.3`](https://github.com/haltroy/Fostrian/tree/1.0.3)
+- Latest Recommended Version: [`1.0.4`](https://github.com/haltroy/Fostrian/tree/1.0.4)
 - In Development Version: [`1.1`](https://github.com/haltroy/Fostrian/tree/1.1)
 
 ## Installation & Usage

@@ -20,7 +20,8 @@ Here's a table of all `1.0` versions of Fostrian.
 |-|-|-|-|
 | [`1.0`](https://github.com/Haltroy/Fostrian/tree/1.0.0)| Initial Release | New Version Initial Release. | :heavy_check_mark: |
 | [`1.0.1`](https://github.com/Haltroy/Fostrian/tree/1.0.1)| Small bug-fix | Version with small improvements. | :x: |
-| [`1.0.2`](https://github.com/Haltroy/Fostrian/tree/1.0.2)| Hotfix | Latest version with small improvements and bug-fixes. | :heavy_check_mark: |
+| [`1.0.2`](https://github.com/Haltroy/Fostrian/tree/1.0.2)| Hotfix | Latest version with small improvements and bug-fixes. | :x: |
+| [`1.0.3`](https://github.com/Haltroy/Fostrian/tree/1.0.3)| Simple Fix | Latest version with small improvements and bug-fixes. | :heavy_check_mark: |
 
 
 ## 1.1.x

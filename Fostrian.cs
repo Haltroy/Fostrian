@@ -13,6 +13,12 @@ namespace LibFoster
         #region Tools
 
         /// <summary>
+        /// Generates a new empty root <see cref="FostrianNode"/>.
+        /// </summary>
+        /// <returns><see cref="FostrianNode"/></returns>
+        public static FostrianNode GenerateRootNode() => new FostrianNode() { IsRoot = true };
+
+        /// <summary>
         /// Seeks and searches <paramref name="search"/> on <paramref name="stream"/>.
         /// </summary>
         /// <param name="stream"><see cref="System.IO.Stream"/></param>
